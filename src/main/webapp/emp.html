@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--引入样式文件-->
+    <link rel="stylesheet" href="static/bs/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="static/jqgrid/css/trirand/ui.jqgrid-bootstrap.css"
+          type="text/css">
+    <!--引入js功能文件-->
+    <script src="static/bs/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="static/bs/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="static/jqgrid/js/trirand/i18n/grid.locale-cn.js" type="text/javascript">
+    </script>
+    <script src="static/jqgrid/js/trirand/jquery.jqGrid.min.js" type="text/javascript">
+    </script>
+    <script>
+        $(function () {
+            $('#tt').jqGrid({
+                //整合bootstrap样式
+                styleUI: 'Bootstrap',
+                url: '/emp/findAll',
+                datatype: 'json',
+                mtype: 'get',
+                colNames: ['编号', '姓名', '年龄', '工资', '部门'],
+                colModel: [
+                    {name: 'id'},
+                    {
+                        name: 'name',
+                        editable: true,// 开启当前列的可编辑模式， 前提是cellEdit必须为true
+                    },
+                    {name: 'age', editable: true,},
+                    {name: 'salary', editable: true,},
+                    {
+                        name: 'dept.id',
+                        edittype:'select',
+                        //渲染静态数据
+                        // editoptions:{value:"1:研发部;2:教学部"},
+                        // 加载远程数据渲染下拉列表,要求响应的是一段html元素内容
+                        editoptions:{dataUrl:'/dept/findAll'},
+                        editable: true,
+                        // 自定义单元格展示内容
+                        /**
+                         * @param value  当前列匹配到的数据
+                         * @param options  当前列的操作配置对象
+                         * @param row 当前行的数据对象
+                         */
+                        formatter: function (value, options, row) {
+                            // console.log(value, options, row)
+                            // 当前函数的返回值会显示在单元格中
+                            return row.dept.deptName;
+                        }
+                    },
+                ],
+                autowidth: true,
+                cellEdit: false, //开启数据表格可编辑模式
+                cellurl: '/emp/update', // 可编辑模式下提交的资源路径
+                rownumbers: true,
+                pager: '#pg',// 生成分页工具栏
+                rowList: [5, 10, 20, 50], // 指定每页展示信息条数的选项列表
+                rowNum: 10, //  指定默认每页展示的条数，这个值必须来自rowList数组的一个元素
+                viewrecords: true, // 显示总记录数
+                page: 2, // 默认显示第几页
+                editurl: '/emp/edit',
+                multiselect:true,//批量删除
+            }).navGrid('#pg',
+                // 控制功能按钮是否显示，默认都为true
+                {'add': true, 'edit': true, 'del': true, 'search': true, 'refresh': false},
+                {
+                    closeAfterEdit:true,// 编辑提交后自动关闭
+                }, // 配置编辑操作额外参数
+                {
+                    editData:{'id':''} ,// 指定添加额外传的参数，会覆盖本次请求同名的请求参数
+
+                }// 配置添加操作额外参数
+            );
+        })
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <table id="tt" class="table table-hover table-striped"></table>
+            <div id="pg"></div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

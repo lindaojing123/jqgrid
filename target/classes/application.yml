@@ -1,0 +1,18 @@
+server:
+  port: 8011
+# springmvc的jsp解析器
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: hr
+    password: hr
+mybatis:
+  mapper-locations: classpath:com/baizhi/mapper/*Mapper.xml
+  type-aliases-package: com.baizhi.entity
+# 自定义日志输出级别
+logging:
+  level:
+    root: info # springboot默认日志级别
+    com.baizhi: info

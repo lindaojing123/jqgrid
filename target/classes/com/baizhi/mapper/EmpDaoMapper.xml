@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.EmpDao">
+    <resultMap id="empMap" type="Emp">
+        <id column="eid" property="id"/>
+        <result column="ename" property="name"/>
+        <result column="esalary" property="salary"/>
+        <result column="eage" property="age"/>
+        <association property="dept" javaType="Dept">
+            <id column="did" property="id"/>
+            <result column="dept_name" property="deptName"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultMap="empMap">
+        select eid,ename,esalary,eage,dept_name,did
+        from (select e.id eid,e.name ename,e.salary esalary,e.age eage,d.id did,
+        d.dept_name dept_name,rownum rn
+                from e_emp e left join e_dept d on e.did=d.id)
+        where rn &gt;= #{begin} and rn &lt;=#{end}
+    </select>
+
+    <select id="records" resultType="java.lang.Integer">
+        select count(*) from e_emp
+    </select>
+</mapper>
